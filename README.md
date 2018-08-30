@@ -1,6 +1,6 @@
 # PriorityHub
 
-this repo is licensed under 
+this repo is licensed under   GNU LESSER GENERAL PUBLIC LICENSE
 
 # TODO
 
