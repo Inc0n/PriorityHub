@@ -1,0 +1,77 @@
+Notification Center
+	Pull to clear
+Lock Screen
+	Vertical adjustment
+	Pull to clear
+Future
+	Noctis support
+	Support for notifications with icons that aren't apps (2FA, low power, etc.)
+	Copy icon getting code from applist into PH?
+
+Fixes
+-----
+
+
+New Features
+-----------
+Option to not highlight currently selected app badge in red?
+External pull to clear (see github)
+Add setting to use native pull to refresh view
+Add setting to clear app badges when clearing from lockscreen? (see markasread7 source code on github)
+Add option to open to currently selected app?
+Add setting to hide app icon if only one notification/notifications from one app are present?
+
+Changelog
+---------
+Version 2.0
+- Notification center support
+- Completely redesigned settings
+- New icon
+- Lots of small fixes and improvements
+
+
+Version 1.5.3
+- Actually fixed iOS 9 alarm snooze crash
+
+Version 1.5.2
+- Fixed crash on iOS 9 when alarms are snoozed
+- Removed custom PH only theme support
+
+Version 1.5
+- Added icon size setting
+- Fixed some themes not working correctly
+
+Version 1.4.7
+- Fixed calendar icon appearance
+- Fixed crashes with Apple Pay notifications
+- Fixed bug where icon area wouldn't scroll when there were lots of icons
+
+Version 1.4.6
+- Slight icon size adjustments on iPad
+
+Version 1.4.5
+- Added VoiceOver support for visually impaired users
+- Made test notification clearable
+
+Version 1.4.4
+- Fixed vertical adjustment not working (again)
+
+Version 1.4.3
+- Fixed vertical adjustment not working
+
+Version 1.4.2
+- Fixed a bug with app icon positions when rotating the lock screen
+- Fixed bug that caused freezes on iOS 7
+
+Version 1.4.1
+- Possibly fixed bug that caused freezes or crashes when device is unlocked
+
+Version 1.4
+- Rearranged settings into sections so they're easier to manage
+- Added button in settings to send test notification (to preview settings changes)
+- Added option to either show or hide all notifications when no app icon is selected (previously PH would hide all)
+- Changed vertical adjustment setting so the top and bottom of the notification view can be adjusted separately
+- Possibly fixed Apple pay credit card icons showing as blank icons
+- Removed conflict with CustomLS
+- Many internal changes, code is cleaner and easier to update
+(Removed colorize selected setting)

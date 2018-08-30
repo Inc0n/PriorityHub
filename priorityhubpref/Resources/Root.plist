@@ -1,0 +1,135 @@
+title = "Priority Hub";
+items = (
+	{
+		cell = PSGroupCell;
+		headerCellClass = PHPrefsHeaderCell;
+	},
+	{
+		cell = PSGroupCell;
+	},
+	{
+		cell = PSSwitchCell;
+		default = 1;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncEnabled;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "Enabled";
+	},
+	{
+		cell = PSGroupCell;
+		label = "Icons";
+	},
+	{
+		cell = PSLinkListCell;
+		detail = PSListItemsController;
+		default = 0;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncIconSize;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "Icon Size";
+		validValues = (
+			0,
+			1,
+			2,
+			3
+		);
+		validTitles = (
+			"Small",
+			"Medium",
+			"Large",
+			"Full Size"
+		);
+	},
+	{
+		cell = PSGroupCell;
+		label = "Number Style";
+	},
+	{
+		cell = PSSegmentCell;
+		default = 1;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncNumberStyle;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "Number Style";
+		validValues = (
+			0,
+			1,
+			2
+		);
+		validTitles = (
+			"None",
+			"Below Icon",
+			"Badge"
+		);
+	},
+	{
+		cell = PSGroupCell;
+	},
+	{
+		cell = PSSwitchCell;
+		cellClass = PHSubtitleSwitchTableCell;
+		default = 1;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncEnablePullToClear;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "Enable Pull To Clear";
+		sublabel = "Clears all notifications for the selected app";
+	},
+	{
+		cell = PSSwitchCell;
+		cellClass = PHSubtitleSwitchTableCell;
+		default = 0;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncCollapseOnLock;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "Deselect On Close";
+	},
+	{
+		cell = PSLinkListCell;
+		detail = PSListItemsController;
+		default = 0;
+		defaults = "com.kunderscore.priorityhub";
+		key = ncShowAllWhenNotSelected;
+		PostNotification = com.kunderscore.priorityhub-prefschanged;
+		label = "When No App Is Selected";
+		validValues = (
+			0,
+			1
+		);
+		validTitles = (
+			"Hide All Notifications",
+			"Show All Notifications"
+		);
+		shortTitles = (
+			"Hide All",
+			"Show All"
+		);
+	},
+	{
+		cell = PSGroupCell;
+		footerText = "© 2016 Thomas Finch";
+	},
+	{
+		cell = PSButtonCell;
+		action = showTestNotificationCenterNotification;
+		label = "Send Test Notification / doesnt work";
+	},
+	{
+		cell = PSButtonCell;
+		action = TFTwitterButtonTapped;
+		icon = "Twitter.png";
+		label = "Developed by Thomas Finch";
+	},
+	{
+		cell = PSButtonCell;
+		action = JGTwitterButtonTapped;
+		icon = "Twitter.png";
+		label = "Designed by Jérémy Goulet";
+	},
+	{
+		cell = PSButtonCell;
+		action = GithubButtonTapped;
+		icon = "Github.png";
+		label = "View Source on GitHub";
+	}
+);

@@ -1,0 +1,10 @@
+Package: com.kunderscore.priorityhub
+Name: Priority Hub
+Depends: firmware (>= 10), mobilesubstrate, preferenceloader, applist
+Version: 0.0.3
+Architecture: iphoneos-arm
+Description: Organize your notifications!
+Depiction: https://kunderscore.gitlab.io/repo/depictions/?p=com.kunderscore.priorityhub
+Maintainer: kunderscore <kunderscore3@gmail.com>
+Author: Thomas Finch <tomf64@gmail.com>
+Section: Tweaks
