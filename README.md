@@ -1,6 +1,6 @@
 # PriorityHub
 
-This github repo is for issues reporting right now
+this repo is licensed under 
 
 # TODO
 
