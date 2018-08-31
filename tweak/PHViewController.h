@@ -22,23 +22,21 @@
 
 
 @interface PHViewController : UIViewController
-@property UIView *hintView;
-@property PHContainerView *phContainer;
-@property NSMutableDictionary *appHubs;
+@property (nonatomic, retain) UIView *hintView;
+@property (nonatomic, retain) PHContainerView *phContainer;
+@property (nonatomic, retain) NSMutableDictionary *appHubs;
 @property (nonatomic, assign, readonly) BOOL selected;
 @property (assign) 	id <PHControllerDelegate> ncdelegate;
 @property (nonatomic, copy) NSString* selectedAppID;
 @property (nonatomic, copy, getter=currentNotifications) NSDictionary* currentNotifications;
-@property (nonatomic) NCNotificationListSection *section;
+@property (nonatomic, retain) NCNotificationListSection *section;
 
 - (BOOL)containsNotification:(NCNotificationRequest *)request withAppId:(NSString *)identifier;
 - (void)updateHubView;
-- (void)updateWithPref;
 - (void)updateSelectedView;
-- (void)updateNoticesIfNeed;
 - (NSInteger)currentNotificationCount;
-- (void)clearAllCurrentNotificationsWith;
-- (void)clearNotification:(NCNotificationRequest *)request;
-- (void)addNotification:(NCNotificationRequest *)request;
-- (void)removeNotification:(NCNotificationRequest *)request;
+- (void)clearAllCurrentNotifications;
+- (void)clearNotificationRequest:(NCNotificationRequest *)request;
+- (void)addNotificationRequest:(NCNotificationRequest *)request;
+- (void)removeNotificationRequest:(NCNotificationRequest *)request;
 @end

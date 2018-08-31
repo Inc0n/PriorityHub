@@ -32,6 +32,13 @@
 #import <BulletinBoard/BBServer.h>
 #import <BulletinBoard/BBAction.h>
 
+
+extern CGSize appViewSize();
+
 @interface NCNotificationCombinedListViewController (PH)
-- (BOOL)shouldShowNotificationAtIndexPath:(NSIndexPath*)indexPath;
+@end
+
+@interface NCNotificationRequest (PH)
+-(void)sxiExpand;
+-(void)sxiCollapse;
 @end

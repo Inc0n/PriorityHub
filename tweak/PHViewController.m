@@ -28,26 +28,6 @@
 	return self;
 }
 
-- (void)updateNoticesIfNeed {
-	BOOL needUpdate = [_ncdelegate allNotificationRequests].count != [self totalNotificationRequests];
-	if (needUpdate) {
-		[self loadNotifications];
-	}
-}
-
-- (void)loadNotifications {
-	NSInteger sections = [_ncdelegate numberOfSectionsInCollectionView:_ncdelegate.collectionView];
-	for (NSInteger section = 0; section < sections; section++) {
-		NSInteger rows = [_ncdelegate collectionView:_ncdelegate.collectionView numberOfItemsInSection:section];
-
-		for (NSInteger row = 0; row < rows; row++) { 
-			NSIndexPath *indexPath = [NSIndexPath indexPathForRow:0 inSection:row];
-			NCNotificationRequest *request = [_ncdelegate notificationRequestAtIndexPath:indexPath];
-			[self addNotification:request];
-		}
-	}
-}
-
 - (void)sortNotificationsIn:(NSString *)hubID { 
 	NSArray *sortedArray = (NSArray *)_currentNotifications[hubID];
 	
@@ -58,13 +38,12 @@
 		NSDate *second = [b timestamp];
 		return -1 * [first compare:second];
 	}];
-	[_currentNotifications[hubID] removeAllObjects];
-	[_currentNotifications[hubID] addObjectsFromArray:sortedArray];
-
-	NSLog(@"%@ array sorted %@", NSStringFromSelector(_cmd), LOG(_currentNotifications[hubID]));
+	// [_currentNotifications[hubID] removeAllObjects];
+	// [_currentNotifications[hubID] addObjectsFromArray:sortedArray];
+	_currentNotifications[hubID] = [sortedArray mutableCopy];
 }
 
-- (void)addNotification:(NCNotificationRequest *)request {
+- (void)addNotificationRequest:(NCNotificationRequest *)request {
 	NSString *identifier = [request sectionIdentifier];
 	
 	NSMutableArray *requests;
@@ -82,12 +61,18 @@
 		[_appIDs insertObject:identifier atIndex:0];
 
 		[self updateNotificationCount:identifier];
+
 	} else {
 		requests = [NSMutableArray arrayWithObject:request];
 		[_currentNotifications setObject:requests forKey:identifier];
 
 		[self createAndAddNewAppHub:identifier];
-	}	
+	}
+	// if ()
+	// _selectedAppID = identifier;
+	// if (self.selected) {
+	// 	[self updateSelectedView];
+	// }
 }
 - (NSInteger)totalNotificationRequests {
 	NSInteger total = 0;
@@ -102,7 +87,6 @@
 	PHAppView *appHub = _appHubs[identifier];
 	if (appHub) {
 		NSInteger count = _currentNotifications[identifier].count;
-		NSLog(@"%@ %lu", NSStringFromSelector(_cmd), count);
 		if (count == 0) {
 			if ([identifier isEqualToString:self.selectedAppID]) _selectedAppID = nil;
 			
@@ -128,32 +112,26 @@
 		   [self containsNotification:request withAppId:identifier];
 }
 
-- (void)removeNotification:(NCNotificationRequest *)request {
+- (void)removeNotificationRequest:(NCNotificationRequest *)request {
 	if ([self shouldRemoveNotifcation:request]){
 		NSString *identifier = [request sectionIdentifier];
 		[_currentNotifications[identifier] removeObject:request];
 		[self updateNotificationCount:identifier];
-
-		// [self clearNotification:request];
 	}
 }
 
-- (CGRect)appHubDefaultFrame {
-	return (CGRect){CGPointZero, appViewSize()};
-}
-
-- (void)clearAllCurrentNotificationsWith {
+- (void)clearAllCurrentNotifications {
 	NSString *hubID = self.selectedAppID;
 	_selectedAppID = nil;
 	[self updateSelectedView];
 	[self updateHubView];
 
 	for (NCNotificationRequest *request in _currentNotifications[hubID]) {
-		[self clearNotification:request];
+		[self clearNotificationRequest:request];
 	}
 }
 
-- (void)clearNotification:(NCNotificationRequest *)request {
+- (void)clearNotificationRequest:(NCNotificationRequest *)request {
 	[request.clearAction.actionRunner executeAction:request.clearAction fromOrigin:nil withParameters:[NSArray new] completion:nil];
 }
 // - (UIImage *)getImageForNotfication:(NCNotificationRequest *)request {
@@ -165,7 +143,7 @@
 	// [_appIDs insertObject:appID atIndex:0];
 	[_appIDs addObject:appID];
 
-	PHAppView *appHub = [PHAppView.alloc initWithFrame:[self appHubDefaultFrame] icon:iconForIdentifier(appID) identifier:appID numberStyle:[defaults integerForKey:@"ncNumberStyle"]];
+	PHAppView *appHub = [PHAppView.alloc initWithIcon:iconForIdentifier(appID) identifier:appID];
 
 	[appHub addTarget:self action:@selector(appViewTapped:) forControlEvents:UIControlEventTouchUpInside];
 	
@@ -173,11 +151,8 @@
 
 	[_appHubs setObject:appHub forKey:appID];
 	[self.phContainer addSubview:appHub];
-
-	if (self.selected) {
-		[self updateSelectedView];
-	}
 }
+
 - (BOOL)selected {
 	return self.selectedAppID.length != 0;
 }
@@ -195,7 +170,6 @@
 	
 	[self sortNotificationsIn:appID];
 }
-
 - (void)updateSelectedView {
 	if (self.selected) {
 		PHAppView *currentAppHub = [_appHubs objectForKey:_selectedAppID];
@@ -207,18 +181,28 @@
 
 		}];
 
-		[_ncdelegate.collectionView addSubview:self.hintView];
-
-		_section.notificationRequests = (NSMutableArray *)self.currentNotifications[_selectedAppID];
+		_section.notificationRequests = (NSMutableArray *)self.currentNotifications[_selectedAppID];		
 		NCNotificationRequest *fristRequest = _section.notificationRequests[0];
+
+		if ([fristRequest respondsToSelector:@selector(sxiExpand)]) {
+			[fristRequest sxiExpand];
+		}
 		_section.title = fristRequest.content.header;
 
-		NSLog(@"%@ select", NSStringFromSelector(_cmd));
+		NSLog(@"%@ select %d", NSStringFromSelector(_cmd), isStackXI);
 
 	} else {
 		[UIView animateWithDuration:0.15 animations:^{
 			_phContainer.selectedView.alpha = 0;
 		}];
+
+		if (_section.notificationRequests.count > 0) {
+			NCNotificationRequest *fristRequest = _section.notificationRequests[0];
+
+			if ([fristRequest respondsToSelector:@selector(sxiCollapse)]) {
+				[fristRequest sxiCollapse];
+			}
+		}
 		_selectedAppID = nil;
 		_section.title = @"";
 		_section.notificationRequests = (NSMutableArray *)@[];
@@ -228,17 +212,12 @@
 
 - (void)updateHubView {
 	// reload for notifications
+	// [_phContainer updateSubviews];
 	[_ncdelegate.collectionView.collectionViewLayout invalidateLayout];
 	[_ncdelegate.collectionView reloadData];
-
 	// Hide pull to clear view if no app is selected
 	// UIView *pullToClearView = ncPullToClearView;
 	// (pullToClearView).hidden = !self.selectedAppID;
 }
-- (void)updateWithPref {
-	// CGFloat height = appViewSize().height;
-	// CGFloat width = CGRectGetWidth(_phContainer.frame);
-	// _phContainer.frame = (CGRect) {{0, 0}, {width, height}};
-	// [_phContainer layoutSubviews];
-}
+
 @end

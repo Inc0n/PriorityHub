@@ -27,7 +27,7 @@
 }
 
 - (void)layoutSubviews {
-	// NSLog(@"PHContainerView %@", NSStringFromSelector(_cmd));
+	NSLog(@"PHContainerView %@", NSStringFromSelector(_cmd));
 	//Layout all app views
 	CGSize appViewSizeVar = appViewSize();
 	CGFloat totalWidth = _controller.appHubs.count * appViewSizeVar.width;
@@ -38,6 +38,7 @@
 
 	for (NSString *key in _controller.appHubs) {
 		PHAppView *appView = _controller.appHubs[key];
+		// [appView update];
 		appView.frame = CGRectMake(startX, 0, appViewSizeVar.width, appViewSizeVar.height);
 		startX += appViewSizeVar.width;
 	}

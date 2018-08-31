@@ -1,6 +1,5 @@
 #import "PHAppView.h"
 
-extern CGSize appViewSize();
 extern UIImage* iconForIdentifier(NSString* identifier);
 
 @class NCNotificationRequest, NCNotificationListSection, PHViewController;
@@ -9,12 +8,12 @@ extern UIImage* iconForIdentifier(NSString* identifier);
 	NSUserDefaults *defaults;
 }
 
-@property UIView *selectedView;
-@property NSMutableDictionary *appHubs;
-@property (nonatomic) PHViewController *controller;
+@property (nonatomic, retain) UIView *selectedView;
+@property (nonatomic, retain) NSMutableDictionary *appHubs;
+@property (nonatomic, retain) PHViewController *controller;
 @property (nonatomic, copy) NSString* selectedAppID;
 // @property (nonatomic, copy, getter=currentNotifications) NSDictionary* currentNotifications;
 // @property (nonatomic) NCNotificationListSection *section;
 - (id)init;
-// - (void)updateView;
+- (void)updateSubviews;
 @end

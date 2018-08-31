@@ -9,8 +9,8 @@
 
 @property (copy) NSString *identifier;
 
-- (PHAppView*)initWithFrame:(CGRect)frame icon:(UIImage*)icon identifier:(NSString*)appID numberStyle:(NSInteger)style;
+- (PHAppView*)initWithIcon:(UIImage*)icon identifier:(NSString*)appID;
 - (void)setNumNotifications:(NSInteger)numNotifications;
 - (void)animateBadge:(BOOL)selected duration:(NSTimeInterval)animationDuration;
-
+- (void)update;
 @end

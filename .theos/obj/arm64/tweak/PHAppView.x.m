@@ -1,3 +1,4 @@
+#line 1 "tweak/PHAppView.x"
 #import "PHAppView.h"
 #import "PHContainerView.h"
 #import "colorbadges_api.h"
@@ -7,17 +8,20 @@
 
 @implementation PHAppView
 
-- (PHAppView*)initWithFrame:(CGRect)frame icon:(UIImage*)icon identifier:(NSString*)appID numberStyle:(NSInteger)style {
-	if (self = [super initWithFrame:frame]) {
+- (PHAppView*)initWithIcon:(UIImage*)icon identifier:(NSString*)appID {
+	if (self = [super init]) {
 		self.identifier = appID;
-		numberStyle = style;
-
-		// Convenience variables
-		CGFloat viewSize = CGRectGetWidth(frame);
+		numberStyle = [prefs() integerForKey:@"ncNumberStyle"];
+		NSInteger style = numberStyle;
+		
+		CGSize size = appViewSize();
+		self.frame = (CGRect){CGPointZero, size};
+		
+		CGFloat viewSize = size.width;
 		CGFloat padding = viewSize * 0.12;
 		CGFloat appViewSize = round(viewSize - 2 * padding);
-		CGFloat badgeViewSize = (style == 2) ? round(appViewSize / 2.5) : round(appViewSize / 1.75); // 2 == badge style
-		CGFloat fontSize = (style == 2) ? round(viewSize / 5) : round(viewSize / 3.25); // 2 == badge style
+		CGFloat fontSize = (numberStyle == 2) ? round(viewSize / 5) : round(viewSize / 3.25); 
+		CGFloat badgeViewSize = (style == 2) ? round(appViewSize / 2.5) : round(appViewSize / 1.75); 
 		
 		appIconView = [[UIImageView alloc] initWithImage:icon];
 		appIconView.frame = CGRectMake(padding, padding, appViewSize, appViewSize);
@@ -28,9 +32,8 @@
 		numberLabel.textColor = [UIColor blackColor];
 		numberLabel.font = [UIFont systemFontOfSize:fontSize];
 
-		// Layout badge and number labels
-		NSLog(@"%@ %lu", NSStringFromSelector(_cmd), style);
-		if (style == 1) { // Below app icon
+		
+		if (style == 1) { 
 			badgeView = [UIView new];
 			badgeView.backgroundColor = [UIColor colorWithWhite:1 alpha:0.6];
 			badgeView.frame = CGRectMake(round(CGRectGetMidX(appIconView.frame) - badgeViewSize / 2), round((CGRectGetMaxY(appIconView.frame) + self.bounds.size.height) / 2 - badgeViewSize / 2), badgeViewSize, badgeViewSize);
@@ -42,7 +45,7 @@
 			numberLabel.frame = badgeView.bounds;
 			numberLabel.textColor = [UIColor colorWithWhite:0 alpha:0.7];
 		}
-		else if (style == 2) { // Badge
+		else if (style == 2) { 
 			badgeView = [UIView new];
 			badgeView.backgroundColor = [UIColor redColor];
 			badgeView.layer.cornerRadius = badgeViewSize / 2;
@@ -51,15 +54,15 @@
 			[self addSubview:badgeView];
 
 			CGFloat badgeViewPadding = padding / 2;
-			badgeView.frame = CGRectMake(CGRectGetWidth(frame) - badgeViewSize - badgeViewPadding, badgeViewPadding, badgeViewSize, badgeViewSize);
+			badgeView.frame = CGRectMake(viewSize - badgeViewSize - badgeViewPadding, badgeViewPadding, badgeViewSize, badgeViewSize);
 			numberLabel.frame = badgeView.bounds;
 			numberLabel.textColor = [UIColor whiteColor];
 			
-			// ColorBadges support
+			
 			dlopen("/Library/MobileSubstrate/DynamicLibraries/ColorBadges.dylib", RTLD_LAZY);
 			Class cb = objc_getClass("ColorBadges");
 			if (cb && [cb isEnabled]) {
-				int badgeColor = [[cb sharedInstance] colorForImage:icon];
+				int badgeColor = [[cb sharedInstance] colorForImage:appIconView.image];
 				badgeView.backgroundColor = UIColorFromRGB(badgeColor);
 				BOOL isDark = [cb isDarkColor:badgeColor];
 				if ([cb areBordersEnabled])
@@ -75,30 +78,50 @@
 				}
 			}
 		}
+		
+		
 	}
 	return self;
 }
+
+- (void)update {
+	
+}
+- (void)updateBagdeStyle {
+	
+	
+	
+	
+}
+- (void)updateIconView {
+
+	
+	
+	
+	
+	
+}	
 
 - (void)setNumNotifications:(NSInteger)numNotifications {
 	numberLabel.text = [NSString stringWithFormat:@"%ld", (long)numNotifications];
 }
 
 - (void)animateBadge:(BOOL)selected duration:(NSTimeInterval)animationDuration {
-	if (numberStyle == 2) // Only animate for below icon style
+	if (numberStyle == 2) 
 		return;
 
-	// [UIView animateWithDuration:animationDuration animations:^(){
-	// 	if (selected) {
-	// 		badgeView.backgroundColor = [UIColor redColor];
-	// 		[badgeView subviews][0].alpha = 0;
-	// 		numberLabel.textColor = [UIColor whiteColor];
-	// 	}
-	// 	else {
-	// 		badgeView.backgroundColor = [UIColor clearColor];
-	// 		[badgeView subviews][0].alpha = 1;
-	// 		numberLabel.textColor = [UIColor blackColor];
-	// 	}
-	// }];
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
 
 @end
