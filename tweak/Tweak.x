@@ -120,6 +120,26 @@ static void sendTestNotification(NSUInteger destinations) {
 }
 %end
 
+%hook NCNotificationListCell
+-(void)cellClearButtonPressed:(id)arg1 {
+	if (phController.selected) {
+		if ([phController currentNotificationCount] == 1) {
+			[phController clearAllCurrentNotifications];
+			return;
+		} else {
+			NCNotificationListCollectionView *collectionView = (NCNotificationListCollectionView *)self.superview;
+			
+			NCNotificationCombinedListViewController *vc = (NCNotificationCombinedListViewController *)collectionView.listDelegate;
+			NCNotificationRequest *request = [vc notificationRequestAtIndexPath:[collectionView indexPathForCell:self]];
+			[phController clearNotificationRequest:request];
+			[phController removeNotificationRequest:request];
+			return;
+		}
+	}
+	%orig;
+}
+%end
+
 %hook NCNotificationPriorityList
 -(unsigned long long)count {
 	if (phController.selected && !isStackXI) { // nothing selected do the normal behavior
@@ -195,6 +215,21 @@ static void sendTestNotification(NSUInteger destinations) {
 	}
 	return NO;
 	return %orig && [prefs() boolForKey:@"ncShowAllWhenNotSelected"];
+}
+
+- (BOOL)insertNotificationRequest:(NCNotificationRequest *)request forCoalescedNotification:(id)arg2 {
+	// BOOL ret = %orig;
+	[phController addNotificationRequest:request];
+	if (phController.selected || ![prefs() boolForKey:@"ncShowAllWhenNotSelected"]) {
+		return NO;
+	}
+	return %orig;
+}
+
+-(void)removeNotificationRequest:(NCNotificationRequest *)request forCoalescedNotification:(id)arg2 {
+	// NSLog(@"%@ %d %@", NSStringFromSelector(_cmd), phController.selected, arg2);
+	[phController removeNotificationRequest:request];
+	%orig; 
 }
 
 -(NCNotificationListCell *)collectionView:(id)arg1 cellForItemAtIndexPath:(id)arg2 {
@@ -362,49 +397,6 @@ static void sendTestNotification(NSUInteger destinations) {
 */
 %end 
 
-%group iOS11
-
-%hook NCNotificationCombinedListViewController
-
-- (BOOL)insertNotificationRequest:(NCNotificationRequest *)request forCoalescedNotification:(id)arg2 {
-	// BOOL ret = %orig;
-	[phController addNotification:request];
-	if (phController.selected || ![prefs() boolForKey:@"ncShowAllWhenNotSelected"]) {
-		return NO;
-	}
-
-	return %orig;
-}
-
--(void)removeNotificationRequest:(NCNotificationRequest *)request forCoalescedNotification:(id)arg2 {
-	// NSLog(@"%@ %d %@", NSStringFromSelector(_cmd), phController.selected, arg2);
-	[phController removeNotificationRequest:request];
-	%orig; 
-}
-%end
-
-%hook NCNotificationListCell
--(void)cellClearButtonPressed:(id)arg1 {
-	if (phController.selected) {
-		if ([phController currentNotificationCount] == 1) {
-			[phController clearAllCurrentNotificationsWith];
-			return;
-		} else {
-			NCNotificationListCollectionView *collectionView = (NCNotificationListCollectionView *)self.superview;
-			
-			NCNotificationCombinedListViewController *vc = (NCNotificationCombinedListViewController *)collectionView.listDelegate;
-			NCNotificationRequest *request = [vc notificationRequestAtIndexPath:[collectionView indexPathForCell:self]];
-			[phController clearNotificationRequest:request];
-			[phController removeNotificationRequest:request];
-			return;
-		}
-	}
-	%orig;
-}
-%end
-%end
-
-
 #define kSettingsChangedNotification (CFStringRef)@"com.kunderscore.priorityhub.prefschanged;"
 
 static NSUserDefaults *statckxipref;
@@ -419,6 +411,7 @@ static void preferencesChanged() {
 	//has the last say in the layout of some views.
 	// dlopen("/Library/MobileSubstrate/DynamicLibraries/SubtleLock.dylib", RTLD_NOW);
 	// dlopen("/Library/MobileSubstrate/DynamicLibraries/Roomy.dylib", RTLD_NOW);
+	if (!IOS_GTE(@"11.0")) return;
 	
 	statckxipref = [[NSUserDefaults alloc] initWithSuiteName:@"io.ominousness.stackxi"];
 	isStackXI = [statckxipref boolForKey:@"Enabled"];
@@ -429,8 +422,5 @@ static void preferencesChanged() {
 
 	%init(common);
 	
-	if (IOS_GTE(@"11.0")) {
-		%init(iOS11);
-	}
 	// CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL, (CFNotificationCallback)preferencesChanged, kSettingsChangedNotification, NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
 }
