@@ -11,7 +11,7 @@ this repo is licensed under   GNU LESSER GENERAL PUBLIC LICENSE
 
 ## compatibility (to be fixed)
 - dots (unwanted behavior)
-- ~lockpro plus (buggy)~ it rly seems okay on mine 
+- lockpro plus (~buggy~ makes notification hubs unresponsive sometimes) ~it rly seems okay on mine~
 - [fastunlockx](https://github.com/CPDigitalDarkroom/FastUnlockX)
 - ~[Stackxi](https://github.com/Ominousness/StackXI)~ done partially since i havent receive anymore reprts on this
 - [Nine](https://github.com/the-casle/nine)
