@@ -5,7 +5,8 @@ this repo is licensed under   GNU LESSER GENERAL PUBLIC LICENSE
 # TODO
 
 ## features (to be added)
-- move to buttom
+- move notification hubs to buttom
+- pull to clear the selected notification hubs
 - color banner 2, color the notfication number in hub view
 
 ## compatibility (to be fixed)
@@ -15,3 +16,6 @@ this repo is licensed under   GNU LESSER GENERAL PUBLIC LICENSE
 - ~[Stackxi](https://github.com/Ominousness/StackXI)~ done partially since i havent receive anymore reprts on this
 - [Nine](https://github.com/the-casle/nine)
 - on ipad the hub seems to be to the left 
+
+## compatibility ()
+- lower (makes icons hub disappear)
