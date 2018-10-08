@@ -1,3 +1,7 @@
+A legacy to do from the previous maintainer / creator
+He went to apple apparently
+---------------------------------------------------------
+
 Notification Center
 	Pull to clear
 Lock Screen
