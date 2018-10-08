@@ -3,6 +3,9 @@
 
 
 #define kScreenFrame UIScreen.mainScreen.bounds
+// #define ENABLED(ncvc) (((SBDashBoardCombinedListViewController*)ncvc.parentViewController).deviceAuthenticated ? getBoolWithKey(@"ncEnabled") : getBoolWithKey(@"lsEnabled"))
+
+// #define ENABLED_DASHBOARD(sbdbvc) (((SBDashBoardViewController*)sbdbvc).authenticated ? getBoolWithKey(@"ncEnabled") : getBoolWithKey(@"lsEnabled"))
 
 static NSUserDefaults *_prefs = nil;
 
@@ -12,8 +15,8 @@ inline static NSUserDefaults *prefs(void) {
 		static dispatch_once_t once_token;
 		dispatch_once(&once_token, ^{
 			[_prefs registerDefaults:@{
+				@"lsEnabled": @YES,
 				@"ncEnabled": @YES,
-				@"timeOnlyEnabled": @YES,
 				@"ncIconSize": [NSNumber numberWithInt:1],
 				@"ncNumberStyle": [NSNumber numberWithInt:1],
 				@"ncEnablePullToClear": @YES,
@@ -25,17 +28,28 @@ inline static NSUserDefaults *prefs(void) {
     return _prefs;
 }
 
-#define ENABLED [prefs() boolForKey:@"ncEnabled"]
-
 static BOOL isStackXI = NO;
 static BOOL debug = NO;
 
+// pull to clear 
+static CGFloat kThreshold = 80;
+static CGFloat sBeginYOffset;
+
+// notification
 static BBServer *bbServer = nil;
 static NCBulletinNotificationSource *notificationSource;
 
 static PHViewController *phController = nil;
-static UIView *ncPullToClearView = nil;
+            
+static PHPullToClearView *pullToClearView = nil;
 static SBDashBoardViewController *dashBoardViewController = nil;
 static CGFloat phcontainerViewInitialY;
 
 static NCNotificationCombinedListViewController *notificationViewController = nil;
+
+inline static BOOL ENABLED() {
+	if (!phController.ncdelegate) return NO;
+	return (((SBDashBoardCombinedListViewController *)phController.ncdelegate.parentViewController).deviceAuthenticated ? getBoolWithKey(@"ncEnabled") : getBoolWithKey(@"lsEnabled"));
+}
+
+extern dispatch_queue_t __BBServerQueue;

@@ -6,6 +6,26 @@ items = (
 	},
 	{
 		cell = PSGroupCell;
+		label = "gonna be a master switch that totally disable the tweak";
+	},
+	{
+		cell = PSSwitchCell;
+		default = 1;
+		defaults = "com.kunderscore.priorityhub";
+		key = Enabled;
+		PostNotification = com.kunderscore.priorityhub.prefschanged;
+		label = "Enable";
+	},
+	{
+		cell = PSGroupCell;
+	},
+	{
+		cell = PSSwitchCell;
+		default = 1;
+		defaults = "com.kunderscore.priorityhub";
+		key = lsEnabled;
+		PostNotification = com.kunderscore.priorityhub.prefschanged;
+		label = "show on LS";
 	},
 	{
 		cell = PSSwitchCell;
@@ -13,19 +33,11 @@ items = (
 		defaults = "com.kunderscore.priorityhub";
 		key = ncEnabled;
 		PostNotification = com.kunderscore.priorityhub.prefschanged;
-		label = "Enabled";
-	},
-	{
-		cell = PSSwitchCell;
-		default = 0;
-		defaults = "com.kunderscore.priorityhub";
-		key = timeOnlyEnabled;
-		PostNotification = com.kunderscore.priorityhub.prefschanged;
-		label = "No icon nor app name just time";
+		label = "show on NC";
 	},
 	{
 		cell = PSGroupCell;
-		label = "Icons";
+		label = "Icons (respring)";
 	},
 	{
 		cell = PSLinkListCell;
@@ -86,9 +98,9 @@ items = (
 	{
 		cell = PSSwitchCell;
 		cellClass = PHSubtitleSwitchTableCell;
-		default = 0;
+		default = 1;
 		defaults = "com.kunderscore.priorityhub";
-		key = ncCollapseOnLock;
+		key = ncDeselectOnLock;
 		PostNotification = com.kunderscore.priorityhub.prefschanged;
 		label = "Deselect On Close";
 	},
@@ -115,12 +127,22 @@ items = (
 	},
 	{
 		cell = PSGroupCell;
-		footerText = "© 2016 Thomas Finch";
+		label = "actions";
+		footerText = "";
+	},
+	{
+		cell = PSButtonCell;
+		action = respring;
+		label = "Respring (:( not working atm))";
 	},
 	{
 		cell = PSButtonCell;
 		action = showTestNotificationCenterNotification;
-		label = "Send Test Notification / doesnt work";
+		label = "Send Test Notification";
+	},
+	{
+		cell = PSGroupCell;
+		footerText = "© 2016 Thomas Finch";
 	},
 	{
 		cell = PSButtonCell;

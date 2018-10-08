@@ -2,16 +2,24 @@
 #import <QuartzCore/QuartzCore.h>
 
 #define pullToClearSize  30
-#define pullToClearThreshold  35
+#define pullToClearThreshold  100
 
 @interface PHPullToClearView : UIView {
-    CAShapeLayer *circleLayer, *xLayer;
+    CAShapeLayer *progressLayer;
 }
 
-@property BOOL xVisible;  
 @property (nonatomic, copy) void (^clearBlock)();
+@property (nonatomic, retain) UILabel *label;
+@property (nonatomic, retain) UIView *progressContainerView;
+@property (nonatomic, retain) UIActivityIndicatorView *spinner;
 
-- (void)didScroll:(UIScrollView*)scrollView;
-- (void)didEndDragging:(UIScrollView*)scrollView;
+- (void)updateProgress:(CGFloat)progress;
+
+- (void)hideAllHidable;
+- (void)setCenterForSubviewsByY:(CGFloat)y;
+
+// - (void)didScroll:(UIScrollView*)scrollView;
+// - (void)didEndDragging:(UIScrollView*)scrollView;
+// - (void)didBeginDragging:(UIScrollView*)scrollView;
 
 @end

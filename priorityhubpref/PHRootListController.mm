@@ -43,6 +43,20 @@
 	[[UIApplication sharedApplication] openURL:githubURL];
 }
 
+- (void)respring {
+
+}
+
+- (void)showTestNotificationCenterNotification {
+	CFNotificationCenterPostNotification(
+		CFNotificationCenterGetDarwinNotifyCenter(), 
+		(CFStringRef)@"showTestNotificationNotification",
+		NULL, 
+		NULL, 
+		YES
+	);
+}
+
 - (id)specifiers {
 	if(_specifiers == nil) {
 		_specifiers = [[self loadSpecifiersFromPlistName:@"Root" target:self] retain];

@@ -1,61 +1,112 @@
 #import "PHPullToClearView.h"
+#import <Constant.h>
+#import "Headers.h"
 
-@implementation PHPullToClearView
+@implementation PHPullToClearView {
+	CGFloat beginOffset, beginLabelCenterY;
+	BOOL beganDrag;
+	
+}
 
 - (id)init {
 	if (self = [super init]) {
+
+		self.userInteractionEnabled = NO;
 		self.backgroundColor = [UIColor clearColor];
-		self.layer.contentsScale = [UIScreen mainScreen].scale;
+		self.frame = (CGRect){CGPointZero, {kScreenWidth, pullToClearThreshold}};
+
+		_progressContainerView = [UIView new];
+		_progressContainerView.hidden = YES;
+		_progressContainerView.backgroundColor = UIColor.clearColor;
+		[self addSubview:_progressContainerView];
 		
-		circleLayer = [CAShapeLayer layer];
-		circleLayer.strokeColor = [UIColor whiteColor].CGColor;
-		circleLayer.fillColor = [UIColor clearColor].CGColor;
-		circleLayer.lineWidth = 1.0;
-		[self.layer addSublayer:circleLayer];
-		
-		xLayer = [CAShapeLayer layer];
-		xLayer.strokeColor = [UIColor whiteColor].CGColor;
-		xLayer.lineWidth = 1.0;
-		xLayer.lineCap = kCALineCapRound;
-		xLayer.hidden = YES;
-		[self.layer addSublayer:xLayer];
+		[self setupLabel];
+		[self setupLoadingIndicator];
+		[self setupCircularProgressBar];
 	}
 	return self;
 }
+- (void)setupLabel {
+	_label = [UILabel.alloc init];
+	self.label.text = @"release to clear";
+	self.label.hidden = YES;
+	self.label.textColor = UIColor.whiteColor;
+	[self.label sizeToFit];
+	self.label.center = self.center;
+	[self addSubview:self.label];
+}
 
-- (void)layoutSubviews {
-	[super layoutSubviews];
+- (void)setupLoadingIndicator {
+	_spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhite];
+	[self addSubview:self.spinner];
+}
+
+- (void)setupCircularProgressBar {
+    //// Color Declarations
+	// const CGFloat gray = 0.666;
+    // UIColor* color = [UIColor colorWithRed: gray green: gray blue: gray alpha: 1];
+    UIColor* color2 = [UIColor colorWithRed: 0 green: 0.65 blue: 0.438 alpha: 1];
     
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.fillColor = UIColor.clearColor.CGColor;
+    shapeLayer.strokeColor = UIColor.lightGrayColor.CGColor;
+    shapeLayer.lineWidth = 3;
+    shapeLayer.lineCap = kCALineCapRound;
+    shapeLayer.lineJoin = kCALineJoinRound;
+    shapeLayer.path = [self generateHollowCirclePath:1.0].CGPath;
 
-	circleLayer.path = [UIBezierPath bezierPathWithOvalInRect:CGRectInset(self.bounds, pullToClearSize * 0.05, pullToClearSize * 0.05)].CGPath;
-	xLayer.frame = CGRectInset(self.bounds, pullToClearSize * 0.32, pullToClearSize * 0.32);
+    [_progressContainerView.layer addSublayer:shapeLayer];
+    
+    //// progress Drawing
+    progressLayer = [CAShapeLayer layer];
+    progressLayer.lineWidth = 4;
+    progressLayer.fillColor = UIColor.clearColor.CGColor;
+    progressLayer.strokeColor = color2.CGColor;
+    progressLayer.lineCap = kCALineCapRound;
 
-	UIBezierPath *xPath = [UIBezierPath bezierPath];
-	[xPath moveToPoint:CGPointMake(0, 0)];
-	[xPath addLineToPoint:CGPointMake(CGRectGetWidth(xLayer.bounds), CGRectGetHeight(xLayer.bounds))];
-	[xPath moveToPoint:CGPointMake(0, CGRectGetHeight(xLayer.bounds))];
-	[xPath addLineToPoint:CGPointMake(CGRectGetWidth(xLayer.bounds), 0)];
-
-	xLayer.path = xPath.CGPath;
+    [self updateProgress:0.0];
+    [_progressContainerView.layer addSublayer:progressLayer];
 }
 
-- (void)didScroll:(UIScrollView*)scrollView {
-	self.xVisible = (scrollView.contentOffset.y <= -pullToClearThreshold);
+const CGFloat width = 30;
+
+- (UIBezierPath *)generateHollowCirclePath:(CGFloat)progress {
+    CGRect oval2Rect = CGRectMake(0, 0, width, width);
+    // CGRect oval2Rect = CGRectMake(0, 0, 50, 50);
+    
+    UIBezierPath* progressPath = [UIBezierPath bezierPath];
+    CGFloat constant = M_PI * 0.5;
+    CGFloat endangle = M_PI * 2 * progress - constant;
+    
+    [progressPath addArcWithCenter: CGPointMake(CGRectGetMidX(oval2Rect), CGRectGetMidY(oval2Rect)) radius: width / 2 startAngle: -constant endAngle: endangle clockwise: YES];
+
+    progressPath.lineCapStyle = kCGLineCapRound;
+    return progressPath;
 }
 
-- (void)didEndDragging:(UIScrollView*)scrollView {
-	if (scrollView.contentOffset.y <= -pullToClearThreshold &&  (scrollView.dragging || scrollView.tracking)) {
-		if (self.clearBlock)
-			self.clearBlock();
-	}
+- (void)updateProgress:(CGFloat)progress {
+    if (progress > 1) progress = 1;
+    if (progress < 0) progress = 0;
+    
+    progressLayer.strokeStart = 0;
+    progressLayer.strokeEnd = progress;
+
+    progressLayer.path = [self generateHollowCirclePath:progress].CGPath;
+    
 }
 
-- (void)setXVisible:(BOOL)visible {
-	xLayer.hidden = !visible;
+- (void)hideAllHidable {
+	self.progressContainerView.hidden = YES;
+	self.label.hidden = YES;
 }
 
-- (BOOL)xVisible {
-	return !xLayer.hidden;
+- (void)setCenterForSubviewsByY:(CGFloat)y {
+	CGPoint center = _label.center;
+	center.y = y - 10; // currentLength;
+	_label.center = center;
+	_spinner.center = center;
+	center.x -= width / 2;
+	center.y -= width / 2 - 5;
+	_progressContainerView.center = center;
 }
-
 @end

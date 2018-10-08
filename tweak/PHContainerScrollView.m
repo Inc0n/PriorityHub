@@ -1,15 +1,16 @@
-#import "PHContainerView.h"
+#import "PHContainerScrollView.h"
 // #import "substrate.h"
 #import "Variables.h"
+#import <Constant.h>
 
-
-@implementation PHContainerView {
+@implementation PHContainerScrollView {
 
 }
 
 - (id)init {
 	if (self = [super init]) {
 		self.directionalLockEnabled = YES;
+		self.clipsToBounds = NO;
 
 		//Create the selected view
 		_selectedView = [UIView new];
@@ -27,8 +28,7 @@
 }
 
 - (void)layoutSubviews {
-	NSLog(@"PHContainerView %@", NSStringFromSelector(_cmd));
-	//Layout all app views
+	//Layout all app hub views
 	CGSize appViewSizeVar = appViewSize();
 	CGFloat totalWidth = _controller.appHubs.count * appViewSizeVar.width;
 	self.contentSize = CGSizeMake(totalWidth, appViewSizeVar.height);
@@ -39,21 +39,17 @@
 	for (NSString *key in _controller.appHubs) {
 		PHAppView *appView = _controller.appHubs[key];
 		// [appView update];
-		appView.frame = CGRectMake(startX, 0, appViewSizeVar.width, appViewSizeVar.height);
+		
+		appView.frame = (CGRect){{startX, 0}, appViewSizeVar};
 		startX += appViewSizeVar.width;
 	}
 
 	_selectedView.layer.cornerRadius = appViewSize().width / 5; // Just in case settings have changed
 }
 
-// - (void)updateNotificationView {
-// 	[_ncdelegate.collectionView.collectionViewLayout invalidateLayout];
-// 	[_ncdelegate.collectionView reloadData];
-// 	// TODO: update scroll view height
-
-// 	// Hide pull to clear view if no app is selected
-// 	// PHContainerView *ncPhContainerView = ncPhContainerView;
-// 	// UIView *pullToClearView = ncPullToClearView;
-// 	// (pullToClearView).hidden = !self.selectedAppID;
-// }
+- (UIView *)hitTest:(CGPoint)point withEvent:(UIEvent *)event {
+	UIView *hitView = [super hitTest:point withEvent:event];
+	if (hitView == self) return nil;
+	return hitView;
+}
 @end
