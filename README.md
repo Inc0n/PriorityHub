@@ -6,12 +6,12 @@ this repo is licensed under   GNU LESSER GENERAL PUBLIC LICENSE
 
 ## features (to be added)
 - move notification hubs to buttom
-- pull to clear the selected notification hubs
+~- pull to clear the selected notification hubs ~
 - color banner 2, color the notfication number in hub view
 
 ## compatibility (to be fixed)
 - dots (unwanted behavior)
-- lockpro plus (~buggy~ makes notification hubs unresponsive sometimes) ~it rly seems okay on mine~
+- lockpro plus ~buggy, makes notification hubs unresponsive sometimes~ all can be fixed from the LPP's preferences
 - [fastunlockx](https://github.com/CPDigitalDarkroom/FastUnlockX)
 - ~[Stackxi](https://github.com/Ominousness/StackXI)~ done partially since i havent receive anymore reprts on this
 - [Nine](https://github.com/the-casle/nine)
